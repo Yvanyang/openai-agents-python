@@ -1,0 +1,115 @@
+{
+  "rules": [
+    {
+      "pattern": "v-if=\"([^\"]+)\"",
+      "replacement": "{\\1 && ",
+      "description": "Convert v-if to conditional rendering",
+      "examples": {
+        "before": "<div v-if=\"show\">Content</div>",
+        "after": "{show && <div>Content</div>}"
+      }
+    },
+    {
+      "pattern": "v-else",
+      "replacement": "",
+      "description": "Convert v-else to conditional rendering",
+      "examples": {
+        "before": "<div v-if=\"show\">Content</div><div v-else>Other</div>",
+        "after": "{show ? <div>Content</div> : <div>Other</div>}"
+      }
+    },
+    {
+      "pattern": "v-for=\"([^\"]+) in ([^\"]+)\"",
+      "replacement": "{\\2.map((\\1) => ",
+      "description": "Convert v-for to map",
+      "examples": {
+        "before": "<div v-for=\"item in items\">{{item}}</div>",
+        "after": "{items.map((item) => <div>{item}</div>)}"
+      }
+    },
+    {
+      "pattern": "v-model=\"([^\"]+)\"",
+      "replacement": "value={\\1} onChange={(e) => set\\1(e.target.value)}",
+      "description": "Convert v-model to value and onChange",
+      "examples": {
+        "before": "<input v-model=\"name\">",
+        "after": "<input value={name} onChange={(e) => setName(e.target.value)}>"
+      }
+    },
+    {
+      "pattern": "@([a-zA-Z0-9_-]+)=\"([^\"]+)\"",
+      "replacement": "on\\1={(e) => \\2}",
+      "description": "Convert @ event handlers to on[Event]",
+      "examples": {
+        "before": "<button @click=\"handleClick\">Click</button>",
+        "after": "<button onClick={(e) => handleClick}>Click</button>"
+      }
+    },
+    {
+      "pattern": ":([a-zA-Z0-9_-]+)=\"([^\"]+)\"",
+      "replacement": "\\1={\\2}",
+      "description": "Convert : bindings to JSX attributes",
+      "examples": {
+        "before": "<div :class=\"className\">Content</div>",
+        "after": "<div className={className}>Content</div>"
+      }
+    },
+    {
+      "pattern": "class=\"([^\"]+)\"",
+      "replacement": "className=\"\\1\"",
+      "description": "Convert class to className",
+      "examples": {
+        "before": "<div class=\"container\">Content</div>",
+        "after": "<div className=\"container\">Content</div>"
+      }
+    },
+    {
+      "pattern": "{{ ([^}]+) }}",
+      "replacement": "{\\1}",
+      "description": "Convert Vue interpolation to JSX",
+      "examples": {
+        "before": "<div>{{ message }}</div>",
+        "after": "<div>{message}</div>"
+      }
+    }
+  ],
+  "lifecycle_mappings": {
+    "beforeCreate": "[]",
+    "created": "[]",
+    "beforeMount": "[]",
+    "mounted": "[]",
+    "beforeUpdate": null,
+    "updated": null,
+    "beforeDestroy": "[]",
+    "destroyed": "[]"
+  },
+  "directive_mappings": {
+    "v-if": "conditional rendering",
+    "v-else": "conditional rendering",
+    "v-else-if": "conditional rendering",
+    "v-for": "map",
+    "v-show": "style={{ display: condition ? '' : 'none' }}",
+    "v-bind": "JSX attribute",
+    "v-on": "on[Event]",
+    "v-model": "value + onChange",
+    "v-text": "children",
+    "v-html": "dangerouslySetInnerHTML"
+  },
+  "special_cases": {
+    "computed_properties": {
+      "pattern": "computed:\\s*{(.*?)}",
+      "replacement": "useMemo",
+      "description": "Convert computed properties to useMemo"
+    },
+    "watchers": {
+      "pattern": "watch:\\s*{(.*?)}",
+      "replacement": "useEffect",
+      "description": "Convert watchers to useEffect"
+    },
+    "mixins": {
+      "pattern": "mixins:\\s*\\[(.*?)\\]",
+      "replacement": "custom hooks",
+      "description": "Convert mixins to custom hooks"
+    }
+  }
+}
