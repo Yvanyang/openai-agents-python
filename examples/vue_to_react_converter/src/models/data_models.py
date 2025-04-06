@@ -1,18 +1,20 @@
 """Data models for the Vue-to-React converter."""
 
-from typing import Dict, List, Optional, Union
-from pydantic import BaseModel, Field
+from typing import Any, Dict, List, Optional, Union
+from pydantic import BaseModel, Field, ConfigDict
 
 
 class VueComponent(BaseModel):
     """Represents a Vue component with its structure and properties."""
+    
+    model_config = ConfigDict(arbitrary_types_allowed=True)
     
     name: str = Field(description="Name of the Vue component")
     template: str = Field(description="HTML template of the Vue component")
     script: str = Field(description="JavaScript/TypeScript code of the Vue component")
     style: Optional[str] = Field(None, description="CSS styles of the Vue component")
     props: Dict[str, Dict] = Field(default_factory=dict, description="Component props with their types and defaults")
-    data: Dict[str, any] = Field(default_factory=dict, description="Component data properties")
+    data: Dict[str, Any] = Field(default_factory=dict, description="Component data properties")
     computed: Dict[str, str] = Field(default_factory=dict, description="Computed properties with their implementations")
     methods: Dict[str, str] = Field(default_factory=dict, description="Component methods with their implementations")
     lifecycle_hooks: Dict[str, str] = Field(default_factory=dict, description="Lifecycle hooks with their implementations")
@@ -23,10 +25,12 @@ class VueComponent(BaseModel):
 class ReactComponent(BaseModel):
     """Represents a React component converted from a Vue component."""
     
+    model_config = ConfigDict(arbitrary_types_allowed=True)
+    
     name: str = Field(description="Name of the React component")
     imports: List[str] = Field(default_factory=list, description="Import statements for the React component")
     props: Dict[str, Dict] = Field(default_factory=dict, description="Component props with their types and defaults")
-    state: Dict[str, any] = Field(default_factory=dict, description="Component state properties")
+    state: Dict[str, Any] = Field(default_factory=dict, description="Component state properties")
     effects: List[Dict] = Field(default_factory=list, description="useEffect hooks with their dependencies")
     methods: Dict[str, str] = Field(default_factory=dict, description="Component methods with their implementations")
     jsx: str = Field(description="JSX code for the React component")
@@ -36,6 +40,8 @@ class ReactComponent(BaseModel):
 
 class ConversionIssue(BaseModel):
     """Represents an issue found during the conversion process."""
+    
+    model_config = ConfigDict(arbitrary_types_allowed=True)
     
     type: str = Field(description="Type of issue (e.g., 'syntax', 'functionality', 'missing_feature')")
     description: str = Field(description="Description of the issue")
@@ -47,6 +53,8 @@ class ConversionIssue(BaseModel):
 class ConversionBatch(BaseModel):
     """Represents a batch of files to be converted together."""
     
+    model_config = ConfigDict(arbitrary_types_allowed=True)
+    
     files: List[str] = Field(description="List of file paths in the batch")
     dependencies: Dict[str, List[str]] = Field(default_factory=dict, description="Dependencies between files in the batch")
     priority: int = Field(description="Priority of the batch (lower number = higher priority)")
@@ -55,6 +63,8 @@ class ConversionBatch(BaseModel):
 class ConversionPlan(BaseModel):
     """Represents a plan for converting Vue components to React."""
     
+    model_config = ConfigDict(arbitrary_types_allowed=True)
+    
     batches: List[ConversionBatch] = Field(description="Batches of files to be converted")
     dependency_graph: Dict[str, List[str]] = Field(description="Graph of dependencies between all components")
     conversion_order: List[str] = Field(description="Order in which components should be converted")
@@ -62,6 +72,8 @@ class ConversionPlan(BaseModel):
 
 class ConversionResult(BaseModel):
     """Represents the result of converting a Vue component to React."""
+    
+    model_config = ConfigDict(arbitrary_types_allowed=True)
     
     original_file: str = Field(description="Path to the original Vue component file")
     converted_file: str = Field(description="Path to the converted React component file")
@@ -72,6 +84,8 @@ class ConversionResult(BaseModel):
 
 class ConversionReport(BaseModel):
     """Represents a report of the entire conversion process."""
+    
+    model_config = ConfigDict(arbitrary_types_allowed=True)
     
     total_files: int = Field(description="Total number of files processed")
     successful_conversions: int = Field(description="Number of successful conversions")
@@ -84,6 +98,8 @@ class ConversionReport(BaseModel):
 class KnowledgeBaseRule(BaseModel):
     """Represents a rule in the knowledge base for Vue to React conversion."""
     
+    model_config = ConfigDict(arbitrary_types_allowed=True)
+    
     pattern: str = Field(description="Pattern to match in Vue code")
     replacement: str = Field(description="Replacement pattern for React code")
     description: str = Field(description="Description of the rule")
@@ -92,6 +108,8 @@ class KnowledgeBaseRule(BaseModel):
 
 class KnowledgeBase(BaseModel):
     """Represents a knowledge base for Vue to React conversion."""
+    
+    model_config = ConfigDict(arbitrary_types_allowed=True)
     
     rules: List[KnowledgeBaseRule] = Field(description="List of conversion rules")
     lifecycle_mappings: Dict[str, str] = Field(description="Mappings from Vue lifecycle hooks to React equivalents")
